@@ -63,18 +63,6 @@ function onUnstake() {
     gas: 200000000000000,
   });
 }
-
-function onDonate() {
-    Near.call({
-      contractName: account,
-      methodName: "unstake",
-      args: {
-        amount: Big(amount).mul(Big(10).pow(24)).toFixed(),
-      },
-      gas: 200000000000000,
-    });
-  }
-
 const userLoggedIn = context.accountId;
 
 if (!userLoggedIn) {
@@ -195,7 +183,8 @@ return (
           {!isUnstakeSelected ? (
             <Button
               disabled={
-                parseFloat(amount ?? "0") > parseFloat(nearBalance ?? "0") || parseFloat(amount ?? "0") <=0
+                parseFloat(amount ?? "0") > parseFloat(nearBalance ?? "0") ||
+                parseFloat(amount ?? "0") <= 0
               }
               onClick={onStake}
               variant="secondary"
@@ -205,7 +194,8 @@ return (
           ) : (
             <Button
               disabled={
-                parseFloat(amount ?? "0") > parseFloat(stakedBalance ?? "0") || parseFloat(amount ?? "0") <=0
+                parseFloat(amount ?? "0") > parseFloat(stakedBalance ?? "0") ||
+                parseFloat(amount ?? "0") <= 0
               }
               onClick={onUnstake}
               variant="secondary"
@@ -213,16 +203,17 @@ return (
               Unstake
             </Button>
           )}
-           <Button
-             variant="outline" 
-              disabled={
-                parseFloat(amount ?? "0") <=0
-              }
-              onClick={onDonate}
-            
-            >
+          <Link
+            to={
+              "https://app.potlock.org/?tab=project&projectId=build.sputnik-dao.near"
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="outline" disabled={parseFloat(amount ?? "0") <= 0}>
               Donate
             </Button>
+          </Link>
         </CardFooter>
       </Card>
     </Container>
