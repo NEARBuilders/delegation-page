@@ -41,6 +41,12 @@ if (cardFooter === "") {
   return <ClassnameConf output={setCardFooter} className={className} />;
 }
 
+if (ButtonConf == undefined) return "";
+const [buttonLink, setButtonLink] = useState("");
+
+if (buttonLink === "")
+  return <ButtonConf output={setButtonLink} variant="secondary" size="sm" />;
+
 const account = "builddao.poolv1.near";
 
 function onStake() {
@@ -63,6 +69,15 @@ function onUnstake() {
     gas: 200000000000000,
   });
 }
+
+function onWithdraw() {
+  Near.call({
+    contractName: account,
+    methodName: "withdraw_all",
+    args: {},
+    gas: 200000000000000,
+  });
+}
 const userLoggedIn = context.accountId;
 
 if (!userLoggedIn) {
@@ -78,52 +93,31 @@ if (!userLoggedIn) {
 }
 
 const balanceResp = fetch(
-  `https://api3.nearblocks.io/v1/account/${userLoggedIn}`,
+  `https://api3.nearblocks.io/v1/account/${userLoggedIn}`
 );
 const nearBalance = Big(balanceResp?.body?.account?.[0]?.amount ?? "0")
   .div(Big(10).pow(24))
   .toFixed(4);
 
-const stakedBalanceResp = fetch("https://archival-rpc.mainnet.near.org", {
-  method: "POST",
-  headers: {
-    "content-type": "application/json",
-  },
-  body: JSON.stringify({
-    jsonrpc: "2.0",
-    id: "dontcare",
-    method: "query",
-    params: {
-      request_type: "call_function",
-      finality: "final",
-      account_id: account,
-      method_name: "get_account_total_balance",
-      args_base64: btoa(
-        JSON.stringify({
-          account_id: userLoggedIn,
-        }),
-      ),
-    },
-  }),
-});
-
-let stakedBalance = 0;
-
-if (
-  stakedBalanceResp !== null &&
-  Array.isArray(stakedBalanceResp.body.result.result)
-) {
-  stakedBalance = Big(
-    parseInt(
-      stakedBalanceResp.body.result.result
-        .map((c) => String.fromCharCode(c))
-        .join("")
-        .replace(/\"/g, ""),
-    ) ?? "0",
-  )
+function convertAmountToReadableFormat(value) {
+  return Big(value ?? "0")
     .div(1e24)
     .toFixed(4);
 }
+
+const stakedBalanceResp = Near.view(account, "get_account_staked_balance", {
+  account_id: userLoggedIn,
+});
+const stakedBalance = convertAmountToReadableFormat(stakedBalanceResp);
+const unstakedBalanceResp = Near.view(account, "get_account_unstaked_balance", {
+  account_id: userLoggedIn,
+});
+const unstakedBalance = convertAmountToReadableFormat(unstakedBalanceResp);
+const allowedToWithdraw = Near.view(
+  account,
+  "is_account_unstaked_balance_available",
+  { account_id: userLoggedIn }
+);
 
 const Container = styled.div`
   .text-red {
@@ -136,7 +130,10 @@ return (
     <Container className="flex max-w-lg px-10 mx-auto w-max pt-10">
       <Card className={card}>
         <CardHeader>
-          <CardTitle>Stake NEAR to the Build DAO treasury</CardTitle>
+          <CardTitle>
+            {isUnstakeSelected ? "Unstake NEAR from" : "Stake NEAR to"} the
+            Build DAO treasury
+          </CardTitle>
           <CardDescription>
             <div className="flex items-center space-x-2 pt-1 w-max">
               <Switch
@@ -160,9 +157,23 @@ return (
                 onChange={(e) => setAmount(e.target.value)}
               />
               <p className="text-sm">
-                {!isUnstakeSelected
-                  ? `Balance: ${nearBalance} NEAR`
-                  : `Staked Balance: ${stakedBalance}`}
+                {!isUnstakeSelected ? (
+                  `Balance: ${nearBalance} NEAR`
+                ) : (
+                  <div>
+                    Staked Balance: {stakedBalance} NEAR
+                    {parseFloat(unstakedBalance) > 0 && (
+                      <div className="flex gap-2 items-center">
+                        Unstaked Balance: {unstakedBalance} NEAR
+                        {allowedToWithdraw && (
+                          <Button className={buttonLink} onClick={onWithdraw}>
+                            Withdraw
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </p>
             </div>
             {!isUnstakeSelected &&
@@ -210,9 +221,7 @@ return (
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button variant="outline" disabled={parseFloat(amount ?? "0") <= 0}>
-              Donate
-            </Button>
+            <Button variant="outline">Donate</Button>
           </Link>
         </CardFooter>
       </Card>
