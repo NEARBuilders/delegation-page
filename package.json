@@ -1,0 +1,16 @@
+{
+  "name": "nearbuilders-delegation",
+  "version": "0.0.0",
+  "description": "",
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "bw": "bos-workspace",
+    "dev": "bw dev",
+    "build": "bw build",
+    "fmt": "prettier --write '**/*.{js,jsx,ts,tsx,json}'"
+  },
+  "devDependencies": {
+    "bos-workspace": "^1.0.0-alpha"
+  }
+}
