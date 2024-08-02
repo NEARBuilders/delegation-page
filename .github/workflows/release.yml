@@ -11,8 +11,10 @@ jobs:
       bw-legacy: false
       deploy-env: "mainnet"
       app-name: "nearbuilders-delegation"
-      deploy-account-address: ${{ secrets.BOS_DEPLOY_ACCOUNT_ID }}
-      signer-account-address: ${{ secrets.BOS_DEPLOY_ACCOUNT_ID }}
-      signer-public-key: ${{ secrets.BOS_SIGNER_PUBLIC_KEY }}
+      deploy-account-address: ${{ vars.BOS_DEPLOY_ACCOUNT_ID }}
+      signer-account-address: ${{ vars.BOS_DEPLOY_ACCOUNT_ID }}
+      signer-public-key: ${{ vars.BOS_SIGNER_PUBLIC_KEY }}
     secrets:
       SIGNER_PRIVATE_KEY: ${{ secrets.BOS_SIGNER_PRIVATE_KEY }}
+    environment:
+      name: buildcommons.near
