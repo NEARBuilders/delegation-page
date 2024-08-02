@@ -6,6 +6,7 @@ on:
 
 jobs:
   deploy-mainnet:
+    environment: "buildcommons.near"
     uses: nearbuilders/bos-workspace/.github/workflows/deploy.yml@main
     with:
       bw-legacy: false
@@ -16,5 +17,3 @@ jobs:
       signer-public-key: ${{ vars.BOS_SIGNER_PUBLIC_KEY }}
     secrets:
       SIGNER_PRIVATE_KEY: ${{ secrets.BOS_SIGNER_PRIVATE_KEY }}
-    environment:
-      name: buildcommons.near
