@@ -13,6 +13,6 @@ jobs:
       app-name: "nearbuilders-delegation"
       deploy-account-address: "buildcommons.near"
       signer-account-address: "buildcommons.near"
-      signer-public-key: ${{ vars.BOS_SIGNER_PUBLIC_KEY }}
+      signer-public-key: "ed25519:BDD3c71kFuzD4jUtZcYyjEwhKjpvecH21zYSqinLXi15"
     secrets:
       SIGNER_PRIVATE_KEY: ${{ secrets.BOS_SIGNER_PRIVATE_KEY }}
