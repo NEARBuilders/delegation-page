@@ -1,8 +1,4 @@
 {
-<<<<<<< Updated upstream
-  "account": "nearbuilders-delegation"
-=======
   "account": "buildcommons.near",
   "index": "buildcommons.near/widget/Index"
->>>>>>> Stashed changes
 }
