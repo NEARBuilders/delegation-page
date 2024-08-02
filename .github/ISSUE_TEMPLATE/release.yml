@@ -6,6 +6,7 @@ on:
 
 jobs:
   deploy-mainnet:
+    environment: buildcommons.near
     uses: nearbuilders/bos-workspace/.github/workflows/deploy.yml@main
     with:
       bw-legacy: false
