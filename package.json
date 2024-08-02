@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "bw": "bos-workspace",
-    "dev": "bw dev",
+    "dev": "bw dev -g https://ipfs.web4.near.page/ipfs/bafybeibe63hqugbqr4writdxgezgl5swgujay6t5uptw2px7q63r7crk2q",
     "build": "bw build",
     "fmt": "prettier --write '**/*.{js,jsx,ts,tsx,json}'"
   },

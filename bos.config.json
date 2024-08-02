@@ -1,3 +1,4 @@
 {
-  "account": "buildcommons.near"
+  "account": "buildcommons.near",
+  "index": "buildcommons.near/widget/Index"
 }
