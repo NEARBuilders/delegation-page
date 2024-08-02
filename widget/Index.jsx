@@ -86,6 +86,7 @@ if (!userLoggedIn) {
       <div className="mx-auto w-max pt-10 space-y-2">
         <Alert>
           <AlertTitle>Please login to continue!</AlertTitle>
+          <Wallet provides={({ signIn}) => <Button onClick={signIn}>Login</Button>} />
         </Alert>
       </div>
     </Tailwind>
